@@ -1,53 +1,96 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- * @flow
- */
-
 import React, { Component } from 'react';
 import {
+  Alert,
   AppRegistry,
+  Navigator,
+  Platform,
   StyleSheet,
+  TabBarIOS,
   Text,
+  TouchableHighlight,
   View
 } from 'react-native';
 
-class GitHubDashboard extends Component {
-  render() {
-    return (
-      <View style={styles.container}>
-        <Text style={styles.welcome}>
-          Welcome to React Native!
-        </Text>
-        <Text style={styles.instructions}>
-          To get started, edit index.android.js
-        </Text>
-        <Text style={styles.instructions}>
-          Double tap R on your keyboard to reload,{'\n'}
-          Shake or press menu button for dev menu
-        </Text>
-      </View>
-    );
-  }
-}
+var Feed = require('./components/Feed');
+var FeedTab = require('./components/android/FeedTab');
+var LoginModal = require('./components/LoginModal');
+var Profile = require('./components/Profile');
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
+var Buffer = require('buffer/').Buffer;
+
+var GitHubDashboard = React.createClass({
+  getInitialState: function() {
+    return {
+      loggedIn: false,
+      selectedTab: 'Feed'
+    }
   },
-  welcome: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 10,
+  login: function(email, password) {
+
+    function handleErrors(response) {
+      if (!response.ok) {
+        throw Error(response.statusText);
+      }
+      return response;
+    }
+
+    var authenticationString = Buffer.from(email + ':'+ password).toString('base64');
+
+    fetch('https://api.github.com/user',{
+      headers: {
+        'Authorization' : 'Basic ' + authenticationString
+      }
+    })
+    .then(handleErrors)
+    .then((response) => response.json())
+    .then((responseJson) => {
+
+      this.setState({
+        loggedIn: true,
+        user: responseJson
+      });
+
+    })
+    .catch((error) => {
+      console.log(error);
+      Alert.alert(
+        'Unable to login user',
+        '',
+        [
+            {text: 'OK', onPress: () => console.log('OK pressed')},
+        ],
+        { cancelable: false }
+      )
+
+    });
   },
-  instructions: {
-    textAlign: 'center',
-    color: '#333333',
-    marginBottom: 5,
+  renderTab: function(name, page, isTabActive, onPressHandler, onLayoutHandler) {
+    return (
+      <TouchableHighlight
+        key={`${name}_${page}`}
+        onPress={() => onPressHandler(page)}
+        onLayout={onLayoutHandler}
+        underlayColor="transparent"
+        style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}
+        >
+        <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+          <Text>{name}</Text>
+        </View>
+      </TouchableHighlight>
+    );
   },
+  render: function() {
+    if (this.state.loggedIn) {
+      return (
+        <View />
+      );
+    }
+    else {
+      return (
+        <LoginModal login={this.login} />
+      );
+    }
+  }
 });
 
 AppRegistry.registerComponent('GitHubDashboard', () => GitHubDashboard);

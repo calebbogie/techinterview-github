@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import {
+  AlertIOS,
   AppRegistry,
   NavigatorIOS,
   StyleSheet,
@@ -15,6 +16,7 @@ var Profile = require('./components/Profile');
 var Buffer = require('buffer/').Buffer;
 
 var GitHubDashboard = React.createClass({
+  // Set the initial state of this view
   getInitialState: function() {
     return {
       loggedIn: false,
@@ -23,6 +25,7 @@ var GitHubDashboard = React.createClass({
   },
   login: function(email, password) {
 
+    // Error handler helper
     function handleErrors(response) {
       if (!response.ok) {
         throw Error(response.statusText);
@@ -30,8 +33,10 @@ var GitHubDashboard = React.createClass({
       return response;
     }
 
+    // Put email and password into base64 string
     var authenticationString = Buffer.from(email + ':'+ password).toString('base64');
 
+    // Issue login http request
     fetch('https://api.github.com/user',{
       headers: {
         'Authorization' : 'Basic ' + authenticationString
@@ -41,6 +46,7 @@ var GitHubDashboard = React.createClass({
     .then((response) => response.json())
     .then((responseJson) => {
 
+      // Set login state to true and save user information
       this.setState({
         loggedIn: true,
         user: responseJson
@@ -48,39 +54,27 @@ var GitHubDashboard = React.createClass({
 
     })
     .catch((error) => {
-    
-      if (Platform.OS == 'ios') {
-          AlertIOS.alert(
-            'Unable to login user',
-            '',
-            [
-                {text: 'OK'}
-            ],
-          );
-      }
-      else if (Platform.OS == 'android') {
-          Alert.alert(
-            'Unable to login user',
-            '',
-            [
-                {text: 'OK', onPress: () => console.log('OK pressed')},
-            ],
-            { cancelable: false }
-          )
-      }
-
+        AlertIOS.alert(
+          'Unable to login user',
+          '',
+          [
+              {text: 'OK'}
+          ],
+        );
     });
   },
   render: function() {
+    //The user has logged in, so let's show the feed
     if (this.state.loggedIn) {
       return (
         <TabBarIOS
           selectedTab={this.state.selectedTab}
           unselectedTintColor="white"
           tintColor="white"
-          barTintColor="#16BA81">
+          barTintColor="#66a3ff">
 
           <TabBarIOS.Item
+            title="Feed"
             selected={this.state.selectedTab === 'Feed'}
             onPress={() => {
               this.setState({
@@ -88,10 +82,10 @@ var GitHubDashboard = React.createClass({
               });
             }}
           >
-            <View style={{flex: 1}}>
+            <View style={{flex: 1, paddingBottom: 50}}>
               <NavigatorIOS
                 ref='nav'
-                barTintColor='#16BA81'
+                barTintColor='#66a3ff'
                 tintColor='white'
                 translucent={false}
                 style={{flex: 1}}
@@ -104,6 +98,7 @@ var GitHubDashboard = React.createClass({
           </TabBarIOS.Item>
 
           <TabBarIOS.Item
+            title="My Profile"
             selected={this.state.selectedTab === 'Profile'}
             onPress={() => {
               this.setState({
@@ -111,10 +106,10 @@ var GitHubDashboard = React.createClass({
               });
             }}
           >
-            <View style={{flex: 1}}>
+            <View style={{flex: 1, paddingBottom: 50}}>
               <NavigatorIOS
                 ref='nav'
-                barTintColor='#16BA81'
+                barTintColor='#66a3ff'
                 tintColor='white'
                 translucent={false}
                 style={{flex: 1}}
@@ -132,6 +127,7 @@ var GitHubDashboard = React.createClass({
         </TabBarIOS>
       );
     }
+    // If the user hasn't logged in yet, present the login modal
     else {
       return (
         <LoginModal login={this.login} />

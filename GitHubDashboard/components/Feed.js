@@ -4,7 +4,6 @@ import {
 	AlertIOS,
  	AppRegistry,
 	ListView,
-	Platform,
 	RefreshControl,
 	StyleSheet,
 	Text,
@@ -17,6 +16,7 @@ var Event = require('./Event');
 
 var Feed = React.createClass({
 	getInitialState: function() {
+		// Create listview
 		var eventList = new ListView.DataSource({rowHasChanged: (r1, r2) => true});
 		var events = [''];
 
@@ -30,6 +30,7 @@ var Feed = React.createClass({
 		}
 	},
 	componentDidMount: function() {
+		// Set "downloading" to true so that the activity indicator will appear
 		this.setState({downloading: true});
 		this.downloadEvents();
 	},
@@ -42,12 +43,14 @@ var Feed = React.createClass({
 	      	return response;
 	    }
 
+	    // Issue https request to download public events
     	fetch('https://api.github.com/events')
       	.then(handleErrors)
       	.then((response) => response.json())
       	.then((responseJson) => {
       		var events = this.state.events.slice();
 
+      		// Save public events and add them to the list view
       		this.setState({
       			eventList: this.state.eventList.cloneWithRows(responseJson),
       			events: responseJson,
@@ -59,35 +62,23 @@ var Feed = React.createClass({
       	.catch((error) => {
         	this.setState({downloading: false});
 
-        	console.log(error);
-        
-	        if (Platform.OS == 'ios') {
-	          	AlertIOS.alert(
-	            	'An error occurred',
-	            	'',
-	            	[
-	              		{text: 'OK'}
-	            	],
-	          	);
-	        }
-	        else if (Platform.OS == 'android') {
-	          	Alert.alert(
-	            	'An error occurred',
-	            	'',
-	            	[
-	              		{text: 'OK', onPress: () => console.log('OK pressed')},
-	            	],
-	            	{ cancelable: false }
-	          	)
-	        }
+          	AlertIOS.alert(
+            	'An error occurred',
+            	'',
+            	[
+              		{text: 'OK'}
+            	],
+          	);
 
       	});
 	},
 	refreshEvents: function() {
+		// Set "refreshing" to true so that the pull down activity indicator will appear
 		this.setState({refreshing: true});
 		this.downloadEvents();
 	},
 	renderRow: function(rowData: string, sectionID: number, rowID: number, highlightRow: (sectionID: number, rowID: number) => void) {
+		// Render each event
 		return (
 			<Event event={rowData} navigator={this.props.navigator} />
 		);
@@ -103,7 +94,7 @@ var Feed = React.createClass({
 	    }
 	    else {
 			return (
-				<View style={{flex: 1}}>
+				<View style={{flex: 1, paddingBottom: 60}}>
 					<ListView
 						refreshControl={
 			              	<RefreshControl

@@ -14,9 +14,9 @@ const styles = StyleSheet.create({
 	navBarContainer: {
 	    flex: 1,
 	    flexDirection: 'row',
-	    justifyContent: 'flex-start',
+	    justifyContent: 'flex-end',
 	    alignItems: 'center',
-	    backgroundColor: '#16BA81',
+	    backgroundColor: '#66a3ff',
 	    paddingTop: 20,
 	}
 });

@@ -19,6 +19,7 @@ var EventDetails = React.createClass({
 		return {
 			repoUrl: '',
 			repoOwner: '',
+			repoName: '',
 			watchersCount: 0,
 			openIssuesCount: 0,
 			language: ''
@@ -34,14 +35,17 @@ var EventDetails = React.createClass({
 	      	return response;
 	    }
 
+	    // Download repository information from the url passed in with the event object
     	fetch(this.props.event.repo.url)
       	.then(handleErrors)
       	.then((response) => response.json())
       	.then((responseJson) => {
       		
+      		// Save repository information so that it can be displayed
       		this.setState({
       			repoUrl: responseJson.html_url,
       			repoOwner: responseJson.owner.login,
+      			repoName: responseJson.full_name,
       			watchersCount: responseJson.watchers_count,
       			openIssuesCount: responseJson.open_issues_count,
       			language: responseJson.language
@@ -51,28 +55,13 @@ var EventDetails = React.createClass({
       	.catch((error) => {
         	this.setState({downloading: false});
 
-        	console.log("ERROR in download");
-        	console.log(error);
-        
-	        if (Platform.OS == 'ios') {
-	          	AlertIOS.alert(
-	            	'An error occurred',
-	            	'',
-	            	[
-	              		{text: 'OK'}
-	            	],
-	          	);
-	        }
-	        else if (Platform.OS == 'android') {
-	          	Alert.alert(
-	            	'An error occurred',
-	            	'',
-	            	[
-	              		{text: 'OK', onPress: () => console.log('OK pressed')},
-	            	],
-	            	{ cancelable: false }
-	          	)
-	        }
+          	AlertIOS.alert(
+            	'Event details could not be downloaded',
+            	'',
+            	[
+              		{text: 'OK'}
+            	],
+          	);
 
       	});
 	},
@@ -80,10 +69,12 @@ var EventDetails = React.createClass({
 
 		var url = this.state.repoUrl;
     
+    	// Prepend "https://" if the url doesn't already have it
 	    if (!url.startsWith("https://")) {
 	      	url = "https://" + url;
 	    }
 
+	    // Open URL in browser
 	    Linking.canOpenURL(url).then(supported => {
 	      	if (supported) {
 	        	Linking.openURL(url).catch();
@@ -109,7 +100,7 @@ var EventDetails = React.createClass({
 		        <View style={{alignItems: 'center', borderRadius: 4, borderWidth: 2, borderColor: 'gray', marginRight: 10}}>
 		         	<TouchableHighlight
 						onPress={() => {
-	            			this.handleUrlPress(this.props.event);
+	            			this.handleUrlPress();
 	          			}}
 	          			underlayColor='transparent'
 	      			>
@@ -118,8 +109,9 @@ var EventDetails = React.createClass({
 		        </View>
 
 		        <View style={{marginTop: 10}}>
-		        	<Text style={{fontSize: 25}}>Repository Information</Text>
+		        	<Text style={{fontSize: 25, marginBottom: 5}}>Repository Information</Text>
 		        	<Text style={{fontSize: 15}}>Repository Owner: {this.state.repoOwner}</Text>
+		        	<Text style={{fontSize: 15}}>Repository Name: {this.state.repoName}</Text>
 		        	<Text style={{fontSize: 15}}>Watchers Count: {this.state.watchersCount}</Text>
 		        	<Text style={{fontSize: 15}}>Open Issues Count: {this.state.openIssuesCount}</Text>
 		        	<Text style={{fontSize: 15}}>Language: {this.state.language}</Text>
