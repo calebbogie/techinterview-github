@@ -8,5 +8,6 @@
   "dependencies": {
     "react": "15.3.2",
     "react-native": "0.34.0"
+    "buffer": "5.0.8"
   }
 }
