@@ -1,6 +1,41 @@
 # Technical Interview Homework: GitHub Dashboard
 
 
+##Instructions for the Reviewer
+In order to run this submission, Node/npm will have to be installed on the reviewer's computer.  If Node/npm is already installed on the reviewer's computer, please skip to step 3.  Otherwise, please start at step 1.
+
+1.  Install HomeBrew by entering the following command in a terminal window:
+
+/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+
+
+2.  Install Node/npm via HomeBrew by entering the following command in a terminal window:
+
+brew install node
+
+Note: I have version 6.11.4 of Node installed on my machine.
+
+
+3.  Download my submission and navigate to <Location of submission>/techinterview-github/GitHubDashboard in a terminal window and run the following command:
+
+npm install
+
+
+4.  After the node modules are installed, navigate to <Location of submission>/techinterview-github/GitHubDashboard/ios in a Finder window and open GitHubDashboard.xcodeproj in Xcode.  Please note that the Xcode version must be 8.0.0 or higher.
+
+Note: I developed and tested my app using Xcode 8.2.1.
+
+
+5.  To run the application, press the run button in the top-left corner of Xcode.  The iPhone simulator should launch and the application will run.
+
+Note: I developed and tested my solution using iOS 10.2 on the iPhone simulator.
+
+##Useful information for the Reviewer
+I developed this application using Facebook's React Native framework.  I believe that I have met all of the minimum and stretch requirements.  When the app is run, you will be prompted to login with your GitHub credentials.  After doing so, you will be presented with a view containing two tabs at the bottom of the view.  When the left tab is selected, the feed of public events will be displayed.  When the right tab is selected, the authenticated user's events will be displayed.  You can selected an event on either tab and you will be presented with more detailed information about the event.
+
+Thank you for your consideration!
+
+
 ##Purpose
 The purpose of this exercise is to assess the candidate’s ability to build cross platform software clients that satisfy stated requirements. The completed assignment should not only satisfy the requirements outlined below, but also give the candidate an opportunity to show-off their skills.
 

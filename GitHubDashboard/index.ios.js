@@ -69,7 +69,7 @@ var GitHubDashboard = React.createClass({
       return (
         <TabBarIOS
           selectedTab={this.state.selectedTab}
-          unselectedTintColor="white"
+          unselectedTintColor="gray"
           tintColor="white"
           barTintColor="#66a3ff">
 
