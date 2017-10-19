@@ -16,12 +16,12 @@ brew install node
 Note: I have version 6.11.4 of Node installed on my machine.
 
 
-3.  Download my submission and navigate to <Location of submission>/techinterview-github/GitHubDashboard in a terminal window and run the following command:
+3.  Download my submission and navigate to "Location of submission"/techinterview-github/GitHubDashboard in a terminal window and run the following command:
 
 npm install
 
 
-4.  After the node modules are installed, navigate to <Location of submission>/techinterview-github/GitHubDashboard/ios in a Finder window and open GitHubDashboard.xcodeproj in Xcode.  Please note that the Xcode version must be 8.0.0 or higher.
+4.  After the node modules are installed, navigate to "Location of submission"/techinterview-github/GitHubDashboard/ios in a Finder window and open GitHubDashboard.xcodeproj in Xcode.  Please note that the Xcode version must be 8.0.0 or higher.
 
 Note: I developed and tested my app using Xcode 8.2.1.
 
